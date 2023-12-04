@@ -11,7 +11,8 @@ import java.sql.*;
 
 
 
-public class SqliteWeatherStore implements WeatherStore {
+//public class SqliteWeatherStore implements WeatherStore {
+public class SqliteWeatherStore {
     private Connection connection;
 
 
@@ -28,7 +29,7 @@ public class SqliteWeatherStore implements WeatherStore {
 
 
 
-    @Override
+   // @Override
     public void insertWeatherData(Weather weather, String cityName) {
         createTableForCity(cityName);
 

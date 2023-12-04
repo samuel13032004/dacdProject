@@ -62,16 +62,16 @@ public class WeatherControl extends TimerTask {
                 //Weather weather = new Weather(tempNew, humidity, clouds, windSpeed, new Location(latitude, longitude, cityName), timestamp, source, predictionTimestamp);
                 Weather weather = new Weather(tempNew, humidity, clouds, windSpeed, timestamp, source, predictionTimestamp);
                 weather.addLocation(latitude, longitude, cityName);
-                //   System.out.println("Nombre de la ciudad: " + cityName);
-                //   System.out.println("Temperatura: " + tempNew + " ºC");
-                //   System.out.println("Humedad: " + humidity + "%");
-                //   System.out.println("Nubes: " + clouds + "%");
-                //   System.out.println("Velocidad del viento: " + windSpeed + " m/s");
-                //   System.out.println("Latitud: " + latitude);
-                //   System.out.println("Longitud: " + longitude);
-                //   System.out.println("-------------------------------------------------");
+                System.out.println("Nombre de la ciudad: " + cityName);
+                System.out.println("Temperatura: " + tempNew + " ºC");
+                System.out.println("Humedad: " + humidity + "%");
+                System.out.println("Nubes: " + clouds + "%");
+                System.out.println("Velocidad del viento: " + windSpeed + " m/s");
+                System.out.println("Latitud: " + latitude);
+                System.out.println("Longitud: " + longitude);
+                System.out.println("-------------------------------------------------");
 
-                weatherStore.insertWeatherData(weather, cityName);
+                weatherStore.publishWeatherEvent(String.valueOf(weather));
             } catch (Exception e) {
                 e.printStackTrace();
             }

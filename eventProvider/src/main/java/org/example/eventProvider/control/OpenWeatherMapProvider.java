@@ -47,7 +47,8 @@ public class OpenWeatherMapProvider implements WeatherProvider {
         new WeatherControl(ApiKey, urls, weatherStore).run();
 
         // Asegúrate de que weatherStore y dbPath estén configurados antes de llamar a startPeriodicQueries
-        if (weatherStore == null || dbPath == null) {
+        if (weatherStore == null) {
+        //if (weatherStore == null || dbPath == null) {
             throw new IllegalStateException("weatherStore and dbPath must be set before starting periodic queries.");
         }
 
