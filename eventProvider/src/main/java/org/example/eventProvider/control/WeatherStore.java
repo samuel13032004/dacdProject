@@ -4,5 +4,6 @@ import org.example.eventProvider.model.Weather;
 
 public interface WeatherStore {
     //void insertWeatherData(Weather weather, String cityName);
-     void publishWeatherEvent(String eventJson);
+     void publishWeatherEvent(Weather weather);
+     //void publishWeatherEvent(String eventJson);
 }

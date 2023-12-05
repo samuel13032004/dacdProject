@@ -71,7 +71,8 @@ public class WeatherControl extends TimerTask {
                 System.out.println("Longitud: " + longitude);
                 System.out.println("-------------------------------------------------");
 
-                weatherStore.publishWeatherEvent(String.valueOf(weather));
+                //weatherStore.publishWeatherEvent(String.valueOf(weather));
+                weatherStore.publishWeatherEvent(weather);
             } catch (Exception e) {
                 e.printStackTrace();
             }
