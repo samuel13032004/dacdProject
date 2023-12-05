@@ -24,6 +24,8 @@ public class WeatherControl extends TimerTask {
         this.weatherStore = weatherStore;
     }
 
+
+
     @Override
     public void run() {
         System.out.println("Nueva Consulta");
@@ -52,7 +54,7 @@ public class WeatherControl extends TimerTask {
                 double longitude = jsonObject.getAsJsonObject("coord").get("lon").getAsDouble();
                 String cityName = jsonObject.get("name").getAsString();
 
-                double tempNew = Math.round(temp * 1000.0) / 1000.0;
+                double tempNew = (Math.round((temp-273) * 1000.0) / 1000.0);
 
                 // Modificación aquí: Crear un objeto Weather con los atributos adicionales
                 Date timestamp = new Date();  // Puedes ajustar esto según tus necesidades
@@ -73,6 +75,7 @@ public class WeatherControl extends TimerTask {
 
                 //weatherStore.publishWeatherEvent(String.valueOf(weather));
                 weatherStore.publishWeatherEvent(weather);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

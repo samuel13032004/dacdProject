@@ -18,12 +18,13 @@ public class Main {
      //apiClient.startPeriodicQueries(weatherControl);
 
         WeatherStore weatherStore = new JMSWeatherStore();
-        apiClient.setWeatherStore(weatherStore);
+        WeatherStore weatherStore1 = new JMSWeatherStore();
+        //apiClient.setWeatherStore(weatherStore);
 
         //String dbPath = "jdbc:sqlite:weather.db";
         apiClient.setWeatherStore(weatherStore);
         //apiClient.setDbPath(dbPath);
-
+       // System.out.println(weatherStore1.getWeather(String.valueOf(weatherStore1)));
         // Iniciar las consultas periódicas
         WeatherControl weatherControl = new WeatherControl(apiKey, apiClient.getUrls(), weatherStore);
         apiClient.startPeriodicQueries(weatherControl);
