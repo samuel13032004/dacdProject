@@ -1,39 +1,40 @@
 package org.example.eventStoreBuilder;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.example.eventProvider.control.JMSWeatherStore;
+import org.example.eventProvider.control.WeatherStore;
+import org.example.eventProvider.model.Weather;
 
 import javax.jms.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.Objects;
 
 public class EventStoreBuilder implements EventStore {
-    private static final String EVENT_STORE_DIRECTORY = "eventstore/prediction.weather/";
+
     private static final String EVENT_TOPIC = "prediction.weather.topic";
-    private InternalEventStore internalEventStore;
-    private List<String> eventList;
     private MessageConsumer messageConsumer;
+    private Connection connection;
+    private InternalEventStore internalEventStore;
+
     public EventStoreBuilder() {
-        this.eventList = new ArrayList<>();
         this.internalEventStore = new InternalEventStore();
     }
+
     @Override
     public void publishWeatherEvent(String eventJson) {
+        // No es necesario mantener una lista de eventos aquí si ya se manejan en PredictionProviderImplementation
+        System.out.println("Evento recibido del broker: " + eventJson);
+        // Puedes llamar directamente al método que maneja los eventos en PredictionProviderImplementation
+        // por ejemplo, predictionProvider.publishWeatherPrediction(eventJson);
         internalEventStore.writeEventToFile(eventJson);
-        eventList.add(eventJson);
-        System.out.println(eventList);
     }
+
     @Override
     public void startSubscription() {
         System.out.println("Iniciando suscripción al broker...");
         try {
             // Crear una conexión JMS
             ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
-            Connection connection = connectionFactory.createConnection();
+            connection = connectionFactory.createConnection();
             connection.start();
             // Crear una sesión JMS
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -42,48 +43,36 @@ public class EventStoreBuilder implements EventStore {
             // Crear un consumidor para el topic
             messageConsumer = session.createConsumer(topic);
             // Establecer un MessageListener para procesar los mensajes entrantes
-            messageConsumer.setMessageListener(new MessageListener() {
-                @Override
-                public void onMessage(Message message) {
-                    if (message instanceof TextMessage) {
-                        try {
-                            String eventJson = ((TextMessage) message).getText();
-                            // Procesar el mensaje, por ejemplo, escribir en un archivo o realizar alguna acción
-                            System.out.println("Mensaje recibido del broker: " + eventJson);
-                        } catch (JMSException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
+            messageConsumer.setMessageListener(message -> handleMessage((TextMessage) message));
             System.out.println("Suscripción al broker iniciada.");
         } catch (JMSException e) {
             e.printStackTrace();
         }
     }
-    public List<String> getEventList() {
-        return eventList;
+
+    @Override
+    public void stopSubscription() {
+        try {
+            if (Objects.nonNull(connection)) {
+                connection.close();
+            }
+            System.out.println("Suscripción al broker detenida.");
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
     }
-//  public class InternalEventStore {
- //      private static final String EVENT_STORE_DIRECTORY = "eventstore/prediction.Weather/";
 
- //      public void writeEventToFile(String eventJson) {
- //          String currentDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
- //          String directoryPath = EVENT_STORE_DIRECTORY + currentDate;
- //          String filePath = directoryPath + ".events";
-
- //          File directory = new File(directoryPath);
- //          if (!directory.exists()) {
- //              directory.mkdirs();
- //          }
-
- //          try (FileWriter writer = new FileWriter(filePath, true)) {
- //              writer.write(eventJson + "\n");
- //              System.out.println("Evento escrito en el archivo: " + filePath);
- //              System.out.println("Consulta cuando extraes datos de JMSWeatherStore: " + eventJson);
- //          } catch (IOException e) {
- //              e.printStackTrace();
- //          }
- //      }
- //  }
+    private void handleMessage(TextMessage message) {
+        try {
+            String eventJson = message.getText();
+            // Llamar al método que maneja los eventos en PredictionProviderImplementation
+            // por ejemplo, predictionProvider.publishWeatherPrediction(eventJson);
+            WeatherStore weatherStore = new JMSWeatherStore();
+            Weather weather = weatherStore.convertJsonToWeather(eventJson);
+            internalEventStore.writeEventToFile(String.valueOf(weather));
+            //internalEventStore.writeEventToFile(eventJson);
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
+    }
 }

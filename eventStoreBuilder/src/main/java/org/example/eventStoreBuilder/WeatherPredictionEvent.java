@@ -19,6 +19,8 @@ public class WeatherPredictionEvent {
         this.longitude = weather.getLocation().getLongitude();
     }
 
+
+
     public String toJson() {
         // Implementar la lógica de serialización a JSON aquí
         return "{\"ss\":\"" + ss + "\",\"ts\":" + ts.getTime() + ",\"predictionTime\":" + predictionTime.getTime() + ",\"latitude\":" + latitude + ",\"longitude\":" + longitude + "}";
