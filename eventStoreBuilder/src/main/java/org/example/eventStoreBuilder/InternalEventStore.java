@@ -13,6 +13,10 @@ public class InternalEventStore {
             String directoryPath = EVENT_STORE_DIRECTORY + currentDate;
             String filePath = directoryPath + ".events";
             File directory = new File(directoryPath);
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
+            String logMessage = String.format("[%s] Evento escrito en el archivo: %s", timestamp, filePath);
+            System.out.println(logMessage);
+
             if (!directory.exists()) {
                 directory.mkdirs();
             }
@@ -21,6 +25,7 @@ public class InternalEventStore {
                 System.out.println("Evento escrito en el archivo: " + filePath);
                 System.out.println("Consulta cuando extraes datos de JMSWeatherStore: " + eventJson);
             } catch (IOException e) {
+                System.err.println("Error al escribir en el archivo: " + filePath);
                 e.printStackTrace();
             }
         }

@@ -6,11 +6,15 @@ import java.util.List;
 
 public interface WeatherStore {
     //void insertWeatherData(Weather weather, String cityName);
-    void publishWeatherEvent(Weather weather);
+    //void publishWeatherEvent(Weather weather);
      //void publishWeatherEvent(String eventJson);
-     List<Weather> getAllWeatherEvents();
-    String convertWeatherToJson(Weather weather);
-    Weather convertJsonToWeather(String json);
+     //List<Weather> getAllWeatherEvents();
+     //List<Weather> getAllWeatherEvents();
+     //List<String> getWeatherJson();
+    void save(List<Weather> weatherList);
+
+   //String convertWeatherToJson(Weather weather);
+   //Weather convertJsonToWeather(String json);
 
     //@Override
    // public Weather getWeather(Weather weather) {

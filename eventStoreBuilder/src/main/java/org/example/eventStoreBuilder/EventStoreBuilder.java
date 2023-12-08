@@ -10,21 +10,20 @@ import java.util.Objects;
 
 public class EventStoreBuilder implements EventStore {
 
-    private static final String EVENT_TOPIC = "prediction.weather.topic";
+    private static final String EVENT_TOPIC = "prediction.weather";
     private MessageConsumer messageConsumer;
     private Connection connection;
     private InternalEventStore internalEventStore;
+    private WeatherStore weatherStore;
 
     public EventStoreBuilder() {
         this.internalEventStore = new InternalEventStore();
+        this.weatherStore = new JMSWeatherStore(); // Utilizar JMSWeatherStore como implementación de WeatherStore
     }
 
     @Override
     public void publishWeatherEvent(String eventJson) {
-        // No es necesario mantener una lista de eventos aquí si ya se manejan en PredictionProviderImplementation
         System.out.println("Evento recibido del broker: " + eventJson);
-        // Puedes llamar directamente al método que maneja los eventos en PredictionProviderImplementation
-        // por ejemplo, predictionProvider.publishWeatherPrediction(eventJson);
         internalEventStore.writeEventToFile(eventJson);
     }
 
@@ -32,17 +31,12 @@ public class EventStoreBuilder implements EventStore {
     public void startSubscription() {
         System.out.println("Iniciando suscripción al broker...");
         try {
-            // Crear una conexión JMS
             ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
             connection = connectionFactory.createConnection();
             connection.start();
-            // Crear una sesión JMS
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            // Obtener el destino (topic) desde el contexto JNDI o directamente
             Topic topic = session.createTopic(EVENT_TOPIC);
-            // Crear un consumidor para el topic
             messageConsumer = session.createConsumer(topic);
-            // Establecer un MessageListener para procesar los mensajes entrantes
             messageConsumer.setMessageListener(message -> handleMessage((TextMessage) message));
             System.out.println("Suscripción al broker iniciada.");
         } catch (JMSException e) {
@@ -50,7 +44,7 @@ public class EventStoreBuilder implements EventStore {
         }
     }
 
-    @Override
+    // Método para detener la suscripción
     public void stopSubscription() {
         try {
             if (Objects.nonNull(connection)) {
@@ -65,12 +59,11 @@ public class EventStoreBuilder implements EventStore {
     private void handleMessage(TextMessage message) {
         try {
             String eventJson = message.getText();
-            // Llamar al método que maneja los eventos en PredictionProviderImplementation
-            // por ejemplo, predictionProvider.publishWeatherPrediction(eventJson);
-            WeatherStore weatherStore = new JMSWeatherStore();
-            Weather weather = weatherStore.convertJsonToWeather(eventJson);
-            internalEventStore.writeEventToFile(String.valueOf(weather));
-            //internalEventStore.writeEventToFile(eventJson);
+            System.out.println("Mensaje recibido del broker: " + eventJson);
+
+            // Utilizar JMSWeatherStore para guardar el evento
+            //Weather weather = weatherStore.prepare(eventJson);
+            internalEventStore.writeEventToFile(eventJson);
         } catch (JMSException e) {
             e.printStackTrace();
         }

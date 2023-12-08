@@ -9,6 +9,7 @@ import com.google.gson.JsonParser;
 import org.example.eventProvider.model.Weather;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimerTask;
 
@@ -16,6 +17,7 @@ public class WeatherControl extends TimerTask {
     private final String apiKey;
     private final String[] urls;
     private final WeatherStore weatherStore;
+    private ArrayList<Weather> weatherList = new ArrayList<>();
 
 
     public WeatherControl(String apiKey, String[] urls, WeatherStore weatherStore) {
@@ -23,8 +25,6 @@ public class WeatherControl extends TimerTask {
         this.urls = urls;
         this.weatherStore = weatherStore;
     }
-
-
 
     @Override
     public void run() {
@@ -64,6 +64,8 @@ public class WeatherControl extends TimerTask {
                 //Weather weather = new Weather(tempNew, humidity, clouds, windSpeed, new Location(latitude, longitude, cityName), timestamp, source, predictionTimestamp);
                 Weather weather = new Weather(tempNew, humidity, clouds, windSpeed, timestamp, source, predictionTimestamp);
                 weather.addLocation(latitude, longitude, cityName);
+                weatherList.add(weather);
+
                 System.out.println("Nombre de la ciudad: " + cityName);
                 System.out.println("Temperatura: " + tempNew + " ºC");
                 System.out.println("Humedad: " + humidity + "%");
@@ -74,8 +76,7 @@ public class WeatherControl extends TimerTask {
                 System.out.println("-------------------------------------------------");
 
                 //weatherStore.publishWeatherEvent(String.valueOf(weather));
-                weatherStore.publishWeatherEvent(weather);
-
+                weatherStore.save(weatherList);
             } catch (Exception e) {
                 e.printStackTrace();
             }
