@@ -10,9 +10,10 @@ public class Weather {
     private Location location;
    private final Date ts;  // Timestamp en UTC de la toma de la predicción
    private final String ss;  // Fuente que produce el dato (prediction-provider)
-   private final Date predictionTime;  // Timestamp en UTC de la predicción
+   private final String predictionTime;  // Timestamp en UTC de la predicción
+   //private final Date predictionTime;  // Timestamp en UTC de la predicción
 
-    public Weather(double temp, int humidity, int clouds, double windSpeed, Date ts, String ss, Date predictionTime) {
+    public Weather(double temp, int humidity, int clouds, double windSpeed, Date ts, String ss, String predictionTime) {
         //public Weather(double temp, int humidity, int clouds, double windSpeed, Location location, Date ts, String ss, Date predictionTime) {
         this.temp = temp;
         this.humidity = humidity;
@@ -52,9 +53,12 @@ public class Weather {
        return ss;
    }
 
-   public Date getPredictionTime() {
-       return predictionTime;
-   }
+  //public Date getPredictionTime() {
+  //    return predictionTime;
+  //}
+    public String getPredictionTime() {
+        return predictionTime;
+    }
 
     public void addLocation(double latitude, double longitude, String cityName) {
         location = new Location(latitude,longitude, cityName);

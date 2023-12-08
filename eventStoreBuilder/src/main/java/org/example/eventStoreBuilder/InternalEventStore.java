@@ -21,7 +21,8 @@ public class InternalEventStore {
                 directory.mkdirs();
             }
             try (FileWriter writer = new FileWriter(filePath, true)) {
-                writer.write(eventJson + "\n");
+                //writer.write(eventJson + "\n");
+                writer.write(eventJson.replaceAll("\\s+", "") + "\n");
                 System.out.println("Evento escrito en el archivo: " + filePath);
                 System.out.println("Consulta cuando extraes datos de JMSWeatherStore: " + eventJson);
             } catch (IOException e) {
