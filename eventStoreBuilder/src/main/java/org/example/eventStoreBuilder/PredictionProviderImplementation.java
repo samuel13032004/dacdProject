@@ -10,7 +10,6 @@ import java.util.List;
 public class PredictionProviderImplementation implements PredictionProvider {
 
     private WeatherStore weatherStore;
-    //private List<Weather> weatherEvents = Collections.synchronizedList(new ArrayList<>());
 
     public PredictionProviderImplementation(WeatherStore weatherStore) {
         this.weatherStore = weatherStore;
