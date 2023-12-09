@@ -1,8 +1,6 @@
 package org.example.eventProvider.control;
 
-
 import javax.jms.*;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -11,11 +9,9 @@ import com.google.gson.stream.JsonWriter;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.example.eventProvider.model.Weather;
-
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
-
 
 public class JMSWeatherStore implements WeatherStore{
     private static String url = ActiveMQConnection.DEFAULT_BROKER_URL;
