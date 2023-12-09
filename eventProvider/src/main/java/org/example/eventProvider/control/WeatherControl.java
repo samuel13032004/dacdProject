@@ -4,17 +4,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.example.eventProvider.model.Location;
 import org.example.eventProvider.model.Weather;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimerTask;
-
 public class WeatherControl extends TimerTask {
     private final String apiKey;
     private final String[] urls;
@@ -25,29 +23,43 @@ public class WeatherControl extends TimerTask {
         this.urls = urls;
         this.weatherStore = weatherStore;
     }
-
+    private final Location[] locations = {new Location(28.1204, -15.5268, "Arucas"),
+            new Location(28.9625, -13.5500, "Arrecife"),
+            new Location(28.7355, -13.8646, "Corralejo"),
+            new Location(28.0950, -17.1135, "San Sebastián de La Gomera"),
+            new Location(28.6573, -17.9183, "Llanos de Aridane"),
+            new Location(27.8078, -17.9187, "Valverde"),
+            new Location(28.1044, -17.3436, "Santa Cruz de Tenerife"),
+            new Location(28.0921, -15.5415, "Firgas")
+    };
     @Override
     public void run() {
         System.out.println("Nueva Consulta");
         System.out.println("-------------------------------------------------");
         ArrayList<Weather> weatherList = new ArrayList<>();
-
-        for (String url : urls) {
+        for (Location location : locations) {
             try {
-                URL apiUrl = new URL(url);  // Append the API key to the URL
-                //URL apiUrl = new URL(url+apiKey);  // Append the API key to the URL
-                HttpURLConnection connection = (HttpURLConnection) apiUrl.openConnection();
+                String apiUrl = "https://api.openweathermap.org/data/2.5/forecast?lat=" +
+                        location.getLatitude() +
+                        "&lon=" +
+                        location.getLongitude() +
+                        "&appid=" +
+                        apiKey;
+
+                URL ApiUrl = new URL(apiUrl);
+                HttpURLConnection connection = (HttpURLConnection) ApiUrl.openConnection();
                 connection.setRequestMethod("GET");
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 StringBuilder response = new StringBuilder();
                 String line;
+
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
                 }
+
                 reader.close();
                 connection.disconnect();
 
-                // Parse the JSON array "list"
                 JsonObject jsonResponse = JsonParser.parseString(response.toString()).getAsJsonObject();
                 JsonArray jsonListArray = jsonResponse.getAsJsonArray("list");
 
@@ -58,41 +70,30 @@ public class WeatherControl extends TimerTask {
                     int humidity = jsonObject.getAsJsonObject("main").get("humidity").getAsInt();
                     int clouds = jsonObject.getAsJsonObject("clouds").get("all").getAsInt();
                     double windSpeed = jsonObject.getAsJsonObject("wind").get("speed").getAsDouble();
-                   //JsonObject cityObject = jsonObject.getAsJsonObject("city");
-                   //double latitude = cityObject.getAsJsonObject("coord").get("lat").getAsDouble();
-                   //double longitude = cityObject.getAsJsonObject("coord").get("lon").getAsDouble();
-                    double latitude = jsonObject.getAsJsonObject("coord").get("lat").getAsDouble();
-                    double longitude = jsonObject.getAsJsonObject("coord").get("lon").getAsDouble();
-                    String cityName = jsonObject.get("name").getAsString();
-
                     double tempNew = (Math.round((temp - 273) * 1000.0) / 1000.0);
-
-                    // Obtain the date and time of the prediction
                     String predictionTimestamp = jsonObject.get("dt_txt").getAsString();
 
-                    // Create Weather object
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    String cityName = location.getCityName();
                     Date timestamp = new Date();
                     String source = "prediction-provider";
                     Weather weather = new Weather(tempNew, humidity, clouds, windSpeed, timestamp, source, predictionTimestamp);
-                    weather.addLocation(latitude, longitude, cityName);
+                    weather.addLocation(latitude,longitude,cityName);
                     weatherList.add(weather);
 
-                    // Print information
                     System.out.println("Nombre de la ciudad: " + cityName);
                     System.out.println("Temperatura: " + tempNew + " ºC");
                     System.out.println("Humedad: " + humidity + "%");
                     System.out.println("Nubes: " + clouds + "%");
                     System.out.println("Velocidad del viento: " + windSpeed + " m/s");
-                    System.out.println("Latitud: " + latitude);
-                    System.out.println("Longitud: " + longitude);
                     System.out.println("Fecha de la predicción: " + predictionTimestamp);
+                    System.out.println("Fecha actual: "+timestamp);
+                    System.out.println("Latitud: "+ latitude);
+                    System.out.println(("Longitud: "+ longitude));
                     System.out.println("-------------------------------------------------");
-
                 }
-
-                // Save the weather list after processing all elements
                 weatherStore.save(weatherList);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
