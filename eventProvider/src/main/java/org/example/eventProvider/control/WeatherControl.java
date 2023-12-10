@@ -35,7 +35,6 @@ public class WeatherControl extends TimerTask {
     @Override
     public void run() {
         System.out.println("Nueva Consulta");
-        System.out.println("-------------------------------------------------");
         ArrayList<Weather> weatherList = new ArrayList<>();
         for (Location location : locations) {
             try {
@@ -52,11 +51,9 @@ public class WeatherControl extends TimerTask {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 StringBuilder response = new StringBuilder();
                 String line;
-
                 while ((line = reader.readLine()) != null) {
                     response.append(line);
                 }
-
                 reader.close();
                 connection.disconnect();
 
@@ -81,17 +78,6 @@ public class WeatherControl extends TimerTask {
                     Weather weather = new Weather(tempNew, humidity, clouds, windSpeed, timestamp, source, predictionTimestamp);
                     weather.addLocation(latitude,longitude,cityName);
                     weatherList.add(weather);
-
-                    System.out.println("Nombre de la ciudad: " + cityName);
-                    System.out.println("Temperatura: " + tempNew + " ºC");
-                    System.out.println("Humedad: " + humidity + "%");
-                    System.out.println("Nubes: " + clouds + "%");
-                    System.out.println("Velocidad del viento: " + windSpeed + " m/s");
-                    System.out.println("Fecha de la predicción: " + predictionTimestamp);
-                    System.out.println("Fecha actual: "+timestamp);
-                    System.out.println("Latitud: "+ latitude);
-                    System.out.println(("Longitud: "+ longitude));
-                    System.out.println("-------------------------------------------------");
                 }
                 weatherStore.save(weatherList);
             } catch (Exception e) {

@@ -28,17 +28,4 @@ public class InternalEventStore {
               e.printStackTrace();
           }
         }
-   //private Date obtenerFechaPrediccion(String eventJson) {
-   //    try {
-   //        JsonObject jsonResponse = JsonParser.parseString(eventJson).getAsJsonObject();
-   //        String predictionTimestamp = jsonResponse.get("predictionTimestamp").getAsString();
-
-   //        // Parsear la cadena de fecha a un objeto Date
-   //        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-   //        return dateFormat.parse(predictionTimestamp);
-   //    } catch (Exception e) {
-   //        e.printStackTrace();
-   //        return new Date();  // En caso de error, devolver la fecha actual como valor por defecto
-   //    }
-   //}
 }

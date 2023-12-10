@@ -1,11 +1,7 @@
 package org.example.eventStoreBuilder;
 
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.example.eventProvider.control.JMSWeatherStore;
-import org.example.eventProvider.control.WeatherStore;
 import javax.jms.*;
-
 import static org.apache.activemq.ActiveMQConnection.DEFAULT_BROKER_URL;
 
 public class EventStoreBuilder implements EventStore {
@@ -13,17 +9,14 @@ public class EventStoreBuilder implements EventStore {
     private MessageConsumer messageConsumer;
     private Connection connection;
     private InternalEventStore internalEventStore;
-    //private WeatherStore weatherStore;
 
     public EventStoreBuilder() {
         this.internalEventStore = new InternalEventStore();
-        //this.weatherStore = new JMSWeatherStore();
     }
     @Override
     public void startSubscription() {
         System.out.println("Iniciando suscripción al broker...");
         try {
-            //ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
             ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_BROKER_URL);
             connection = connectionFactory.createConnection();
             connection.start();

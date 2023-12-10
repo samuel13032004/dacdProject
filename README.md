@@ -32,3 +32,5 @@ The WeatherProvider interface and its OpenWeatherMapProvider implementation allo
 The use of MessageListener in EventStoreBuilder and JMSWeatherStore follows the Observer pattern. When a message is received in the broker topic, observers are notified to perform some action.
 
 ## Class Diagram
+
+![img.png](img.png)

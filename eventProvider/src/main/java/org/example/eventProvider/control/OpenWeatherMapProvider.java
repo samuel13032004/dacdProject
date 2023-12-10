@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 
 public class OpenWeatherMapProvider implements WeatherProvider {
     private final String ApiKey = System.getenv("APIKEY");
-    //private final String ApiKey = "337feb6f32f62172e338026e7dde9e57";
     private final String[] urls = {
             "https://api.openweathermap.org/data/2.5/forecast?lat=28.1204&lon=-15.5268&appid=" + ApiKey,
             "https://api.openweathermap.org/data/2.5/forecast?lat=28.9625&lon=-13.5500&appid=" + ApiKey,
