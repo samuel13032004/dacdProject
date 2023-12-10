@@ -29,9 +29,8 @@ public class OpenWeatherMapProvider implements WeatherProvider {
     }
     @Override
     public void startPeriodicQueries(WeatherControl weatherControl) {
-        new WeatherControl(ApiKey, urls, weatherStore).run();
         if (weatherStore == null) {
-            throw new IllegalStateException("weatherStore and dbPath must be set before starting periodic queries.");
+            throw new IllegalStateException("weatherStore must be set before starting periodic queries.");
         }
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         long nowInMillis = System.currentTimeMillis();
