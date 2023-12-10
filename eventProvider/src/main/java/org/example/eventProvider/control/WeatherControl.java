@@ -34,7 +34,7 @@ public class WeatherControl extends TimerTask {
     };
     @Override
     public void run() {
-        System.out.println("Nueva Consulta");
+        System.out.println("New Consultation");
         ArrayList<Weather> weatherList = new ArrayList<>();
         for (Location location : locations) {
             try {

@@ -15,7 +15,7 @@ public class EventStoreBuilder implements EventStore {
     }
     @Override
     public void startSubscription() {
-        System.out.println("Iniciando suscripción al broker...");
+        System.out.println("Starting broker subscription...");
         try {
             ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_BROKER_URL);
             connection = connectionFactory.createConnection();
@@ -24,7 +24,7 @@ public class EventStoreBuilder implements EventStore {
             Topic topic = session.createTopic(EVENT_TOPIC);
             messageConsumer = session.createConsumer(topic);
             messageConsumer.setMessageListener(message -> handleMessage((TextMessage) message));
-            System.out.println("Suscripción al broker iniciada.");
+            System.out.println("Broker subscription initiated.");
         } catch (JMSException e) {
             e.printStackTrace();
         }
@@ -32,7 +32,7 @@ public class EventStoreBuilder implements EventStore {
     private void handleMessage(TextMessage message) {
         try {
             String eventJson = message.getText();
-            System.out.println("Mensaje recibido del broker: " + eventJson);
+            System.out.println("Message received from broker: " + eventJson);
             internalEventStore.writeEventToFile(eventJson);
         } catch (JMSException e) {
             e.printStackTrace();

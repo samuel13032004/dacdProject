@@ -14,17 +14,17 @@ public class InternalEventStore {
           String filePath = directoryPath + ".events";
           File directory = new File(directoryPath);
           String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
-          String logMessage = String.format("[%s] Evento escrito en el archivo: %s", timestamp, filePath);
+          String logMessage = String.format("[%s] Event written to the file: %s", timestamp, filePath);
           System.out.println(logMessage);
           if (!directory.exists()) {
               directory.mkdirs();
           }
           try (FileWriter writer = new FileWriter(filePath, true)) {
               writer.write(eventJson.replaceAll("\\s+", "") + "\n");
-              System.out.println("Evento escrito en el archivo: " + filePath);
-              System.out.println("Consulta cuando extraes datos de JMSWeatherStore: " + eventJson);
+              System.out.println("Event written to the file: " + filePath);
+              System.out.println("Query when extracting data from JMSWeatherStore: " + eventJson);
           } catch (IOException e) {
-              System.err.println("Error al escribir en el archivo: " + filePath);
+              System.err.println("Error writing to file: " + filePath);
               e.printStackTrace();
           }
         }
