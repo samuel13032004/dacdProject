@@ -15,12 +15,10 @@ import java.util.Date;
 import java.util.TimerTask;
 public class WeatherControl extends TimerTask {
     private final String apiKey;
-    private final String[] urls;
     private final WeatherStore weatherStore;
 
-    public WeatherControl(String apiKey, String[] urls, WeatherStore weatherStore) {
+    public WeatherControl(String apiKey, WeatherStore weatherStore) {
         this.apiKey = apiKey;
-        this.urls = urls;
         this.weatherStore = weatherStore;
     }
     private final Location[] locations = {new Location(28.1204, -15.5268, "Arucas"),
@@ -59,6 +57,10 @@ public class WeatherControl extends TimerTask {
 
                 JsonObject jsonResponse = JsonParser.parseString(response.toString()).getAsJsonObject();
                 JsonArray jsonListArray = jsonResponse.getAsJsonArray("list");
+                System.out.println(jsonListArray);
+                System.out.println(jsonListArray.size());
+                // Limpiar la lista antes de agregar eventos para una nueva ubicación
+                weatherList.clear();
 
                 for (JsonElement jsonElement : jsonListArray) {
                     JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -78,6 +80,7 @@ public class WeatherControl extends TimerTask {
                     Weather weather = new Weather(tempNew, humidity, clouds, windSpeed, timestamp, source, predictionTimestamp);
                     weather.addLocation(latitude,longitude,cityName);
                     weatherList.add(weather);
+                    System.out.println(weatherList.size());
                 }
                 weatherStore.save(weatherList);
             } catch (Exception e) {

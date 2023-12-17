@@ -7,20 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 public class OpenWeatherMapProvider implements WeatherProvider {
     private final String ApiKey = System.getenv("APIKEY");
-    private final String[] urls = {
-            "https://api.openweathermap.org/data/2.5/forecast?lat=28.1204&lon=-15.5268&appid=" + ApiKey,
-            "https://api.openweathermap.org/data/2.5/forecast?lat=28.9625&lon=-13.5500&appid=" + ApiKey,
-            "https://api.openweathermap.org/data/2.5/forecast?lat=28.7355&lon=-13.8646&appid=" + ApiKey,
-            "https://api.openweathermap.org/data/2.5/forecast?lat=28.0950&lon=-17.1135&appid=" + ApiKey,
-            "https://api.openweathermap.org/data/2.5/forecast?lat=28.6573&lon=-17.9183&appid=" + ApiKey,
-            "https://api.openweathermap.org/data/2.5/forecast?lat=27.8078&lon=-17.9187&appid=" + ApiKey,
-            "https://api.openweathermap.org/data/2.5/forecast?lat=28.1044&lon=-17.3436&appid=" + ApiKey,
-            "https://api.openweathermap.org/data/2.5/forecast?lat=28.0921&lon=-15.5415&appid=" + ApiKey
-    };
     private WeatherStore weatherStore;
-    public String[] getUrls() {
-        return urls;
-    }
     public String getApiKey() {
         return ApiKey;
     }
@@ -29,6 +16,7 @@ public class OpenWeatherMapProvider implements WeatherProvider {
     }
     @Override
     public void startPeriodicQueries(WeatherControl weatherControl) {
+        new WeatherControl(getApiKey(),weatherStore).run();
         if (weatherStore == null) {
             throw new IllegalStateException("weatherStore must be set before starting periodic queries.");
         }

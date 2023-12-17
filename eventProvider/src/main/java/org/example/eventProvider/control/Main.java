@@ -6,7 +6,7 @@ public class Main {
         String apiKey = apiClient.getApiKey();
         WeatherStore weatherStore = new JMSWeatherStore();
         apiClient.setWeatherStore(weatherStore);
-        WeatherControl weatherControl = new WeatherControl(apiKey, apiClient.getUrls(), weatherStore);
+        WeatherControl weatherControl = new WeatherControl(apiKey, weatherStore);
         apiClient.startPeriodicQueries(weatherControl);
     }
 }
