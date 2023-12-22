@@ -1,4 +1,4 @@
-package org.example.DatalakeBuilder;
+package org.example.DataLakeBuilder;
 
 import java.io.File;
 import java.io.FileWriter;

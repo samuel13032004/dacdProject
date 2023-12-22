@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>DatalakeBuilder</module>
+        <module>DataLakeBuilder</module>
         <module>WeatherPredictionProvider</module>
         <module>HotelPredictionProvider</module>
     </modules>

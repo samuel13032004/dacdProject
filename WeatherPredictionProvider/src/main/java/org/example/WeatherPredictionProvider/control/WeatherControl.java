@@ -22,15 +22,13 @@ public class WeatherControl extends TimerTask {
         this.weatherStore = weatherStore;
     }
     private final Location[] locations = {
-            new Location(28.1204, -15.5268, "Arucas"),
+            new Location(27.7518, -15.5865, "Playa del Inglés"),
             new Location(28.9625, -13.5500, "Arrecife"),
             new Location(28.7355, -13.8646, "Corralejo"),
             new Location(28.0950, -17.1135, "San Sebastián de La Gomera"),
             new Location(28.6573, -17.9183, "Llanos de Aridane"),
             new Location(27.8078, -17.9187, "Valverde"),
             new Location(28.1044, -17.3436, "Santa Cruz de Tenerife"),
-            new Location(28.0921, -15.5415, "Firgas"),
-            new Location(27.7518, -15.5865, "Playa del Inglés"),
     };
     @Override
     public void run() {
@@ -59,9 +57,6 @@ public class WeatherControl extends TimerTask {
 
                 JsonObject jsonResponse = JsonParser.parseString(response.toString()).getAsJsonObject();
                 JsonArray jsonListArray = jsonResponse.getAsJsonArray("list");
-                //System.out.println(jsonListArray);
-                //System.out.println(jsonListArray.size());
-                // Limpiar la lista antes de agregar eventos para una nueva ubicación
                 weatherList.clear();
 
                 for (JsonElement jsonElement : jsonListArray) {
@@ -83,7 +78,6 @@ public class WeatherControl extends TimerTask {
                     weather.addLocation(latitude,longitude,cityName);
                     weatherList.add(weather);
                     //System.out.println(weatherList.size());
-
                 }
                 weatherStore.save(weatherList);
             } catch (Exception e) {

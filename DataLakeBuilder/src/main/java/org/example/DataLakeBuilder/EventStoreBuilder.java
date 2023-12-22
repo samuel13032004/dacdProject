@@ -1,38 +1,60 @@
-package org.example.DatalakeBuilder;
+package org.example.DataLakeBuilder;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
+
 import javax.jms.*;
 import static org.apache.activemq.ActiveMQConnection.DEFAULT_BROKER_URL;
 
 public class EventStoreBuilder implements EventStore {
-    private static final String EVENT_TOPIC = "prediction.Weather";
-    private MessageConsumer messageConsumer;
+    private static final String WEATHER_TOPIC = "prediction.Weather";
+    private static final String HOTEL_TOPIC = "prediction.Hotel";
+    private MessageConsumer weatherMessageConsumer;
+    private MessageConsumer hotelMessageConsumer;
     private Connection connection;
     private InternalEventStore internalEventStore;
 
     public EventStoreBuilder() {
         this.internalEventStore = new InternalEventStore();
     }
+
     @Override
     public void startSubscription() {
         System.out.println("Starting broker subscription...");
+
         try {
             ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_BROKER_URL);
             connection = connectionFactory.createConnection();
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            Topic topic = session.createTopic(EVENT_TOPIC);
-            messageConsumer = session.createConsumer(topic);
-            messageConsumer.setMessageListener(message -> handleMessage((TextMessage) message));
+
+            // Subscribe to the Weather topic
+            Topic weatherTopic = session.createTopic(WEATHER_TOPIC);
+            weatherMessageConsumer = session.createConsumer(weatherTopic);
+            weatherMessageConsumer.setMessageListener(message -> handleMessage((TextMessage) message));
+
+            // Subscribe to the Hotel topic
+            Topic hotelTopic = session.createTopic(HOTEL_TOPIC);
+            hotelMessageConsumer = session.createConsumer(hotelTopic);
+            hotelMessageConsumer.setMessageListener(message -> handleHotelMessage((TextMessage) message));
+
             System.out.println("Broker subscription initiated.");
         } catch (JMSException e) {
             e.printStackTrace();
         }
     }
+
     private void handleMessage(TextMessage message) {
+        processMessage(message, "Weather");
+    }
+
+    private void handleHotelMessage(TextMessage message) {
+        processMessage(message, "Hotel");
+    }
+
+    private void processMessage(TextMessage message, String eventType) {
         try {
             String eventJson = message.getText();
-            System.out.println("Message received from broker: " + eventJson);
+            System.out.println("Message received from " + eventType + " topic: " + eventJson);
             internalEventStore.writeEventToFile(eventJson);
         } catch (JMSException e) {
             e.printStackTrace();

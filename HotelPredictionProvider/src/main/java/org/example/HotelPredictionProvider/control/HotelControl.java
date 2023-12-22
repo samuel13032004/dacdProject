@@ -21,11 +21,7 @@ import java.util.List;
 
 public class HotelControl {
     LocalDate currentDate = LocalDate.now();
-
-    // Calcular la fecha dentro de 5 días
     LocalDate dateIn5Days = currentDate.plusDays(5);
-
-    // Formatear la fecha en el estilo "año-mes-día"
     DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     String formattedDate = dateIn5Days.format(format);
     private final Location[] hotelLocations = {
@@ -37,7 +33,7 @@ public class HotelControl {
             new Location("g659634-d237060", formattedDate,"Hotel LIVVO Risco Del Gato Suites","Corralejo","Fuerteventura"),
             new Location("g580322-d678447", formattedDate,"Barcelo Corralejo Bay" ,"Corralejo","Fuerteventura"),
             new Location("g580322-d288065", formattedDate,"LABRANDA Corralejo Village","Corralejo","Fuerteventura"),
-            new Location("g187470-d15745744", formattedDate,"Avalos Beach House","San Sebastián de La Gomera","La Gomera"),
+            new Location("g187470-d15745744",formattedDate,"Avalos Beach House","San Sebastián de La Gomera","La Gomera"),
             new Location("g1877764-d4697336", formattedDate,"Pensión Amparo Las Hayas","San Sebastián de La Gomera","La Gomera"),
             new Location("g659324-d573646", formattedDate,"Hotel Valle Aridane","Llanos de Aridane","La Palma"),
             new Location("g659324-d948974", formattedDate,"Hotel Benahoare","Llanos de Aridane","La Palma"),
@@ -49,17 +45,10 @@ public class HotelControl {
     public void run() {
         try {
             List<Details> hotelDetailsList = new ArrayList<>();
-
             for (Location location : hotelLocations) {
                 System.out.println("Processing location: " + location.getHotelName());
-
-                // Construir la URL de la API para la ubicación actual
                 String apiUrl = buildApiUrl(location);
-
-                // Realizar la solicitud a la API y obtener la respuesta JSON
                 String jsonResponse = makeApiRequest(apiUrl);
-
-                // Procesar la respuesta JSON y crear hotelDetails
                 Details details = processApiResponse(jsonResponse, location);
                 if (details != null) {
                     hotelDetailsList.add(details);
@@ -67,11 +56,7 @@ public class HotelControl {
                 System.out.println(hotelDetailsList);
                 System.out.println(hotelDetailsList.size());
             }
-
-            // Imprimir o procesar la lista de hotelDetails según sea necesario
-            for (Details details : hotelDetailsList) {
-                System.out.println("Hotel Details: " + details);
-            }
+            JMSHotelStore.save(hotelDetailsList);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,55 +64,36 @@ public class HotelControl {
 
     private Details processApiResponse(String jsonResponse, Location location) {
         try {
-            // Procesar la respuesta JSON
             JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
             JsonObject resultObject = jsonObject.getAsJsonObject("result");
             String chkOut = resultObject.get("chk_out").getAsString();
-
             JsonObject heatmapObject = resultObject.getAsJsonObject("heatmap");
             JsonArray averagePriceDays = heatmapObject.getAsJsonArray("average_price_days");
             JsonArray cheapPriceDays = heatmapObject.getAsJsonArray("cheap_price_days");
             JsonArray highPriceDays = heatmapObject.getAsJsonArray("high_price_days");
-
-            // Convertir JsonArray a List<String>
             List<String> averagePriceDaysList = jsonArrayToList(averagePriceDays);
             List<String> cheapPriceDaysList = jsonArrayToList(cheapPriceDays);
             List<String> highPriceDaysList = jsonArrayToList(highPriceDays);
-
             long timestamp = jsonObject.get("timestamp").getAsLong();
             Date timestampDate = new Date(timestamp);
             String ss = "hotel-prediction";
-
-            // Imprimir el timestamp en formato legible
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             System.out.println("Timestamp: " + sdf.format(timestampDate));
-
-            // Imprimir los datos
-            //System.out.println("chk_out: " + chkOut);
-            //System.out.println("average_price_days: " + averagePriceDays);
-            //System.out.println("cheap_price_days: " + cheapPriceDays);
-            //System.out.println("high_price_days: " + highPriceDays);
-
             System.out.println("chk_out: " + chkOut);
             System.out.println("average_price_days: " + averagePriceDaysList);
             System.out.println("cheap_price_days: " + cheapPriceDaysList);
             System.out.println("high_price_days: " + highPriceDaysList);
             System.out.println(location.getIsland());
-            // Crear y devolver un objeto hotelDetails
            Details details = new Details(averagePriceDaysList, cheapPriceDaysList, highPriceDaysList, timestampDate, ss);
             details.addHotelLocation(location.getHotelKey(), location.getCheckout(), location.getHotelName(), location.getHotelName(), location.getCity());
             return details;
-
         } catch (Exception e) {
             e.printStackTrace();
-            // Puedes manejar la excepción de alguna manera adecuada para tu aplicación
             return null;
         }
     }
 
     private String buildApiUrl(Location location) {
-        // Construir la URL de la API para la ubicación actual
-        // (Dependiendo de la lógica específica de tu aplicación)
         return "https://data.xotelo.com/api/heatmap?hotel_key=" + location.getHotelKey() + "&chk_out=" + formattedDate;
     }
 
@@ -135,18 +101,14 @@ public class HotelControl {
         URL url = new URL(apiUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
-
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         StringBuilder response = new StringBuilder();
         String line;
-
         while ((line = reader.readLine()) != null) {
             response.append(line);
         }
-
         reader.close();
         connection.disconnect();
-
         return response.toString();
     }
 

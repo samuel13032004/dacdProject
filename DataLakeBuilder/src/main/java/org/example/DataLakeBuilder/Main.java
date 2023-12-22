@@ -1,4 +1,4 @@
-package org.example.DatalakeBuilder;
+package org.example.DataLakeBuilder;
 
 public class Main{
     public static void main(String[] args) {

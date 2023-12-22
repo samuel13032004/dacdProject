@@ -15,10 +15,10 @@ import org.example.HotelPredictionProvider.model.Details;
 
 
 public class JMSHotelStore {
-    private static String url = ActiveMQConnection.DEFAULT_BROKER_URL;
-    private static String subject = "prediction.Hotel";
+    private static final String url = ActiveMQConnection.DEFAULT_BROKER_URL;
+    private static final String subject = "prediction.Hotel";
 
-    public void save(List<Details> hotelDetailsList) {
+    public static void save(List<Details> hotelDetailsList) {
         try {
             ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
             Connection connection = connectionFactory.createConnection();
