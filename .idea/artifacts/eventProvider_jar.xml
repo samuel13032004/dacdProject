@@ -3,9 +3,9 @@
     <output-path>$PROJECT_DIR$/out/artifacts/eventProvider_jar</output-path>
     <root id="archive" name="eventProvider.jar">
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/eventProvider/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/WeatherPredictionProvider/META-INF/MANIFEST.MF" />
       </element>
-      <element id="module-output" name="eventProvider" />
+      <element id="module-output" name="WeatherPredictionProvider" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/eclipse/jetty/jetty-io/9.4.46.v20220331/jetty-io-9.4.46.v20220331.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/apache/activemq/activemq-client/5.17.2/activemq-client-5.17.2.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/javax/annotation/javax.annotation-api/1.3/javax.annotation-api-1.3.jar" path-in-jar="/" />
