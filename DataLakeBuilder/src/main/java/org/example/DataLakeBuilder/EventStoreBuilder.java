@@ -30,12 +30,12 @@ public class EventStoreBuilder implements EventStore {
             // Subscribe to the Weather topic
             Topic weatherTopic = session.createTopic(WEATHER_TOPIC);
             weatherMessageConsumer = session.createConsumer(weatherTopic);
-            weatherMessageConsumer.setMessageListener(message -> handleMessage((TextMessage) message));
+            weatherMessageConsumer.setMessageListener(message -> handleMessage((TextMessage) message, "Weather"));
 
             // Subscribe to the Hotel topic
             Topic hotelTopic = session.createTopic(HOTEL_TOPIC);
             hotelMessageConsumer = session.createConsumer(hotelTopic);
-            hotelMessageConsumer.setMessageListener(message -> handleHotelMessage((TextMessage) message));
+            hotelMessageConsumer.setMessageListener(message -> handleHotelMessage((TextMessage) message, "Hotel"));
 
             System.out.println("Broker subscription initiated.");
         } catch (JMSException e) {
@@ -43,19 +43,19 @@ public class EventStoreBuilder implements EventStore {
         }
     }
 
-    private void handleMessage(TextMessage message) {
-        processMessage(message, "Weather");
+    private void handleMessage(TextMessage message, String eventType) {
+        processMessage(message, eventType);
     }
 
-    private void handleHotelMessage(TextMessage message) {
-        processMessage(message, "Hotel");
+    private void handleHotelMessage(TextMessage message, String eventType) {
+        processMessage(message, eventType);
     }
 
     private void processMessage(TextMessage message, String eventType) {
         try {
             String eventJson = message.getText();
             System.out.println("Message received from " + eventType + " topic: " + eventJson);
-            internalEventStore.writeEventToFile(eventJson);
+            internalEventStore.writeEventToFile(eventJson, eventType, "prediction-provider");
         } catch (JMSException e) {
             e.printStackTrace();
         }

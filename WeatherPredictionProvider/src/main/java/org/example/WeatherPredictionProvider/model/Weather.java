@@ -35,7 +35,7 @@ public class Weather {
     public Location getLocation() {
         return location;
     }
-    public void addLocation(double latitude, double longitude, String cityName) {
-        location = new Location(latitude,longitude, cityName);
+    public void addLocation(double latitude, double longitude, String cityName, String island) {
+        location = new Location(latitude,longitude, cityName,island);
     }
 }

@@ -12,6 +12,7 @@
         <module>DataLakeBuilder</module>
         <module>WeatherPredictionProvider</module>
         <module>HotelPredictionProvider</module>
+        <module>BusinessUnit</module>
     </modules>
 
     <properties>

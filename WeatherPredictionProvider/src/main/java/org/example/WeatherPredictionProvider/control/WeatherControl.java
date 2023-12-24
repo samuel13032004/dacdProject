@@ -22,13 +22,13 @@ public class WeatherControl extends TimerTask {
         this.weatherStore = weatherStore;
     }
     private final Location[] locations = {
-            new Location(27.7518, -15.5865, "Playa del Inglés"),
-            new Location(28.9625, -13.5500, "Arrecife"),
-            new Location(28.7355, -13.8646, "Corralejo"),
-            new Location(28.0950, -17.1135, "San Sebastián de La Gomera"),
-            new Location(28.6573, -17.9183, "Llanos de Aridane"),
-            new Location(27.8078, -17.9187, "Valverde"),
-            new Location(28.1044, -17.3436, "Santa Cruz de Tenerife"),
+            new Location(27.7518, -15.5865, "Playa del Inglés", "Gran Canaria"),
+            new Location(28.9625, -13.5500, "Arrecife", "Lanzarote"),
+            new Location(28.7355, -13.8646, "Corralejo", "Fuerteventura"),
+            new Location(28.0950, -17.1135, "San Sebastián de La Gomera","La Gomera"),
+            new Location(28.6573, -17.9183, "Llanos de Aridane","La Palma"),
+            new Location(27.8078, -17.9187, "Valverde","El Hierro"),
+            new Location(28.1044, -17.3436, "Santa Cruz de Tenerife","Tenerife"),
     };
     @Override
     public void run() {
@@ -72,10 +72,11 @@ public class WeatherControl extends TimerTask {
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
                     String cityName = location.getCityName();
+                    String island = location.getIsland();
                     Date timestamp = new Date();
                     String source = "prediction-provider";
                     Weather weather = new Weather(tempNew, humidity, clouds, windSpeed, timestamp, source, predictionTimestamp);
-                    weather.addLocation(latitude,longitude,cityName);
+                    weather.addLocation(latitude,longitude,cityName,island);
                     weatherList.add(weather);
                     //System.out.println(weatherList.size());
                 }

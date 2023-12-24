@@ -7,15 +7,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class InternalEventStore {
-    private static final String EVENT_STORE_DIRECTORY = "eventstore/prediction.Weather/";
+    private static final String EVENT_STORE_DIRECTORY = "eventstore/";
 
-    public void writeEventToFile(String eventJson) {
+    public void writeEventToFile(String eventJson, String eventType, String source) {
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
         String currentDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String source = "prediction-provider";
 
-        // Construye la ruta del directorio siguiendo el formato eventstore/prediction.Weather/{ss}/
-        String directoryPath = EVENT_STORE_DIRECTORY + source + "/";
+        // Construye la ruta del directorio siguiendo el formato eventstore/{eventType}/{source}/
+        String directoryPath = EVENT_STORE_DIRECTORY + eventType + "/" + source + "/";
 
         // Construye la ruta completa del archivo siguiendo el formato {YYYYMMDD}.events
         String filePath = directoryPath + currentDate + ".events";
