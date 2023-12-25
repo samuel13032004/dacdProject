@@ -26,6 +26,7 @@ public class EventSubscriber {
         this.hotelEvents = new ArrayList<>();
         this.weatherEvents = new ArrayList<>();
     }
+
     public void startSubscription() {
         System.out.println("Starting broker subscription...");
         try {

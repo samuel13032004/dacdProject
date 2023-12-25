@@ -6,7 +6,7 @@ import org.example.BusinessUnit.model.WeatherEvent;
 import java.util.List;
 import java.util.Scanner;
 
-public class BusinessUnitCLI {
+public class BusinessUnitCLI implements CommandLineInterface{
     private EventSubscriber eventSubscriber;
     private final String[] islands = new String[]{
             "Gran Canaria", "Lanzarote", "Fuerteventura", "La Gomera", "La Palma", "El Hierro", "Tenerife"
@@ -16,6 +16,7 @@ public class BusinessUnitCLI {
         this.eventSubscriber = eventSubscriber;
     }
 
+    @Override
     public void start() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Seleccione una isla:");
