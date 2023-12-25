@@ -33,11 +33,9 @@ public class EventSubscriber {
             connection = connectionFactory.createConnection();
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            // Subscribe to the Weather topic
             Topic weatherTopic = session.createTopic(WEATHER_TOPIC);
             MessageConsumer weatherMessageConsumer = session.createConsumer(weatherTopic);
             weatherMessageConsumer.setMessageListener(message -> processMessage(message, "Weather"));
-            // Subscribe to the Hotel topic
             Topic hotelTopic = session.createTopic(HOTEL_TOPIC);
             MessageConsumer hotelMessageConsumer = session.createConsumer(hotelTopic);
             hotelMessageConsumer.setMessageListener(message -> processMessage(message, "Hotel"));
@@ -52,10 +50,8 @@ public class EventSubscriber {
                 String eventJson = ((TextMessage) message).getText();
                 System.out.println("Message received from " + eventType + " topic: " + eventJson);
                 try {
-                    // Deserialize to JSON object
                     JsonObject jsonObject = gson.fromJson(eventJson, JsonObject.class);
                     System.out.println("Extract data based on the event type");
-                    // Extract data based on the event type
                     if ("Weather".equals(eventType)) {
                         System.out.println("Extract data based on the event Weather");
                         WeatherEvent weatherEvent = extractWeatherData(jsonObject);
@@ -81,19 +77,16 @@ public class EventSubscriber {
     }
    private WeatherEvent extractWeatherData(JsonObject jsonObject) {
        try {
-           // Extraer datos de la ubicación
            JsonObject location = jsonObject.getAsJsonObject("location");
            String island = location.get("island").getAsString();
            String cityName = location.get("cityName").getAsString();
 
-           // Extraer otros atributos del clima
            double temperature = jsonObject.get("temp").getAsDouble();
            int humidity = jsonObject.get("humidity").getAsInt();
            int clouds = jsonObject.get("clouds").getAsInt();
            double windSpeed = jsonObject.get("windSpeed").getAsDouble();
            String predictionTime = jsonObject.get("predictionTime").getAsString();
 
-           // Crear instancia de WeatherEvent
            WeatherEvent weatherEvent = new WeatherEvent(
                    island,
                    cityName,
@@ -102,7 +95,7 @@ public class EventSubscriber {
                    humidity,
                    clouds,
                    windSpeed,
-                   new Date() // Debes obtener la fecha del objeto ts si es necesario
+                   new Date()
            );
            return weatherEvent;
        } catch (Exception e) {
@@ -112,19 +105,15 @@ public class EventSubscriber {
    }
     private HotelEvent extractHotelData(JsonObject jsonObject) {
         try {
-            // Extraer datos del hotelLocation
             JsonObject hotelLocation = jsonObject.getAsJsonObject("hotelLocation");
             String island = hotelLocation.get("island").getAsString();
             String city = hotelLocation.get("city").getAsString();
             String hotelName = hotelLocation.get("hotelName").getAsString();
             String checkout = hotelLocation.get("checkout").getAsString();
 
-            // Extraer las listas de precios
             JsonArray averagePriceDays = jsonObject.getAsJsonArray("averagePriceDay");
             JsonArray cheapPriceDays = jsonObject.getAsJsonArray("cheapPriceDay");
             JsonArray highPriceDays = jsonObject.getAsJsonArray("highPriceDay");
-
-            // Crear instancia de HotelEvent
 
             return new HotelEvent(
                     island,

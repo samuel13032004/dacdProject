@@ -11,5 +11,14 @@ public class Main {
         // Crea un ScheduledExecutorService para ejecutar la suscripción cada 12 horas
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(eventSubscriber::startSubscription, 0, 12, TimeUnit.HOURS);
+        // Espera 15 segundos
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        BusinessUnitCLI businessUnitCLI = new BusinessUnitCLI(eventSubscriber);
+        businessUnitCLI.start();
     }
+
 }

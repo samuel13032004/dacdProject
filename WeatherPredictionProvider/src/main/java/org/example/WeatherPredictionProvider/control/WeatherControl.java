@@ -13,6 +13,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimerTask;
+
+import static java.lang.Math.round;
+
 public class WeatherControl extends TimerTask {
     private final String apiKey;
     private final WeatherStore weatherStore;
@@ -66,8 +69,10 @@ public class WeatherControl extends TimerTask {
                     int humidity = jsonObject.getAsJsonObject("main").get("humidity").getAsInt();
                     int clouds = jsonObject.getAsJsonObject("clouds").get("all").getAsInt();
                     double windSpeed = jsonObject.getAsJsonObject("wind").get("speed").getAsDouble();
-                    double tempNew = (Math.round((temp - 273) * 1000.0) / 1000.0);
+                    double tempNew = (round((temp - 273) * 1000.0) / 1000.0);
                     String predictionTimestamp = jsonObject.get("dt_txt").getAsString();
+                    double windSpeedMetersPerSecond =(windSpeed * 1000) / 3600;
+                    windSpeedMetersPerSecond = Math.round(windSpeedMetersPerSecond * 100.0) / 100.0;
 
                     double latitude = location.getLatitude();
                     double longitude = location.getLongitude();
@@ -75,7 +80,7 @@ public class WeatherControl extends TimerTask {
                     String island = location.getIsland();
                     Date timestamp = new Date();
                     String source = "prediction-provider";
-                    Weather weather = new Weather(tempNew, humidity, clouds, windSpeed, timestamp, source, predictionTimestamp);
+                    Weather weather = new Weather(tempNew, humidity, clouds, windSpeedMetersPerSecond, timestamp, source, predictionTimestamp);
                     weather.addLocation(latitude,longitude,cityName,island);
                     weatherList.add(weather);
                     //System.out.println(weatherList.size());

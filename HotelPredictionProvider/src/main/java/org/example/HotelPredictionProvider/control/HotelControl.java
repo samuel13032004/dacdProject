@@ -84,8 +84,8 @@ public class HotelControl {
             System.out.println("cheap_price_days: " + cheapPriceDaysList);
             System.out.println("high_price_days: " + highPriceDaysList);
             System.out.println(location.getIsland());
-           Details details = new Details(averagePriceDaysList, cheapPriceDaysList, highPriceDaysList, timestampDate, ss);
-            details.addHotelLocation(location.getHotelKey(), location.getCheckout(), location.getHotelName(), location.getHotelName(), location.getCity());
+            Details details = new Details(averagePriceDaysList, cheapPriceDaysList, highPriceDaysList, timestampDate, ss);
+            details.addHotelLocation(location.getHotelKey(), location.getCheckout(), location.getHotelName(), location.getCity(), location.getIsland());
             return details;
         } catch (Exception e) {
             e.printStackTrace();
