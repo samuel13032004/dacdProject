@@ -29,14 +29,10 @@ public class OpenWeatherMapProvider implements WeatherProvider {
         calendar.set(Calendar.MILLISECOND, 0);
         long targetTimeInMillis = calendar.getTimeInMillis();
         if (nowInMillis >= targetTimeInMillis) {
-            targetTimeInMillis += 24 * 60 * 60 * 1000;
+            targetTimeInMillis += TimeUnit.DAYS.toMillis(1);
         }
         long delay = targetTimeInMillis - nowInMillis;
-        scheduler.scheduleAtFixedRate(() -> {
-            weatherControl.run();
-        }, delay, 6 * 60 * 60 * 1000, TimeUnit.MILLISECONDS);
-        scheduler.schedule(() -> {
-            scheduler.shutdown();
-        }, 5 * 24, TimeUnit.HOURS);
+        long period = TimeUnit.HOURS.toMillis(6);
+        scheduler.scheduleAtFixedRate(weatherControl, delay, period, TimeUnit.MILLISECONDS);
     }
 }

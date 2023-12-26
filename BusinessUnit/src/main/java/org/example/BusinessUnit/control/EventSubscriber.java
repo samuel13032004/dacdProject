@@ -57,10 +57,12 @@ public class EventSubscriber {
                         System.out.println("Extract data based on the event Weather");
                         WeatherEvent weatherEvent = extractWeatherData(jsonObject);
                         weatherEvents.add(weatherEvent);
+                        TSVWriter.writeWeatherEventToTSV(weatherEvent, "datamart/weather_events.tsv");
                     } else if ("Hotel".equals(eventType)) {
                         System.out.println("Extract data based on the event Hotel");
                         HotelEvent hotelEvent = extractHotelData(jsonObject);
                         hotelEvents.add(hotelEvent);
+                        TSVWriter.writeHotelEventToTSV(hotelEvent, "datamart/hotel_events.tsv");
                     } else {
                         System.out.println("Unknown event type: " + eventType);
                     }
@@ -76,6 +78,7 @@ public class EventSubscriber {
             e.printStackTrace();
         }
     }
+
    private WeatherEvent extractWeatherData(JsonObject jsonObject) {
        try {
            JsonObject location = jsonObject.getAsJsonObject("location");

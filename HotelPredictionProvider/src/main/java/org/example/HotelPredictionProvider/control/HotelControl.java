@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
-public class HotelControl {
+public class HotelControl implements Runnable {
     LocalDate currentDate = LocalDate.now();
     LocalDate dateIn5Days = currentDate.plusDays(5);
     DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");

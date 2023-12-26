@@ -18,30 +18,24 @@ public class Details {
         this.ts = ts;
         this.ss = ss;
     }
-
     public List<String> getAveragePriceDay() {
         return averagePriceDay;
     }
-
     public List<String> getCheapPriceDay() {
         return cheapPriceDay;
     }
-
     public List<String> getHighPriceDay() {
         return highPriceDay;
     }
-
     public Date getTs() {
         return ts;
     }
-
     public String getSs() {
         return ss;
     }
     public void addHotelLocation(String hotelKey, String checkout,String hotelName, String city, String island) {
         hotelLocation = new Location(hotelKey,checkout,hotelName,city,island);
     }
-
     public Location getHotelLocation() {
         return hotelLocation;
     }
