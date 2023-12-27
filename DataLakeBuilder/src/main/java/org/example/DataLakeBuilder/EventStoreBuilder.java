@@ -1,62 +1,67 @@
 package org.example.DataLakeBuilder;
 
+import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
-import static org.apache.activemq.ActiveMQConnection.DEFAULT_BROKER_URL;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class EventStoreBuilder implements EventStore {
-    private static final String WEATHER_TOPIC = "prediction.Weather";
-    private static final String HOTEL_TOPIC = "prediction.Hotel";
-    private MessageConsumer weatherMessageConsumer;
-    private MessageConsumer hotelMessageConsumer;
-    private Connection connection;
-    private InternalEventStore internalEventStore;
-
-    public EventStoreBuilder() {
-        this.internalEventStore = new InternalEventStore();
-    }
-
+public class EventStoreBuilder implements EventStore{
+    Date currentDate = new Date();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+    String formattedDate = dateFormat.format(currentDate);
     @Override
     public void startSubscription() {
-        System.out.println("Starting broker subscription...");
-
         try {
-            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_BROKER_URL);
-            connection = connectionFactory.createConnection();
+            System.out.println("Starting broker subscription...");
+            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_BROKER_URL);
+            Connection connection = connectionFactory.createConnection();
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-
-            // Subscribe to the Weather topic
-            Topic weatherTopic = session.createTopic(WEATHER_TOPIC);
-            weatherMessageConsumer = session.createConsumer(weatherTopic);
-            weatherMessageConsumer.setMessageListener(message -> handleMessage((TextMessage) message, "Weather"));
-
-            // Subscribe to the Hotel topic
-            Topic hotelTopic = session.createTopic(HOTEL_TOPIC);
-            hotelMessageConsumer = session.createConsumer(hotelTopic);
-            hotelMessageConsumer.setMessageListener(message -> handleHotelMessage((TextMessage) message, "Hotel"));
-
+            Topic weatherTopic = session.createTopic("prediction.Weather");
+            MessageConsumer weatherConsumer = session.createConsumer(weatherTopic);
+            weatherConsumer.setMessageListener(message -> {
+                if (message instanceof TextMessage) {
+                    try {
+                        String text = ((TextMessage) message).getText();
+                        saveToEventStore("eventstore/datalake/prediction.Weather/prediction-provider/" + formattedDate + ".events", text);
+                    } catch (JMSException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            Topic hotelTopic = session.createTopic("prediction.Hotel");
+            MessageConsumer hotelConsumer = session.createConsumer(hotelTopic);
+            hotelConsumer.setMessageListener(message -> {
+                if (message instanceof TextMessage) {
+                    try {
+                        String text = ((TextMessage) message).getText();
+                        saveToEventStore("eventstore/datalake/prediction.Hotel/prediction-provider/" + formattedDate + ".events", text);
+                    } catch (JMSException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            System.out.println("Waiting for events...");
             System.out.println("Broker subscription initiated.");
-        } catch (JMSException e) {
+            Thread.sleep(Long.MAX_VALUE);
+        } catch (JMSException | InterruptedException e) {
             e.printStackTrace();
         }
     }
-
-    private void handleMessage(TextMessage message, String eventType) {
-        processMessage(message, eventType);
-    }
-
-    private void handleHotelMessage(TextMessage message, String eventType) {
-        processMessage(message, eventType);
-    }
-
-    private void processMessage(TextMessage message, String eventType) {
+    private static void saveToEventStore(String filePath, String event) {
         try {
-            String eventJson = message.getText();
-            System.out.println("Message received from " + eventType + " topic: " + eventJson);
-            internalEventStore.writeEventToFile(eventJson, eventType, "prediction-provider");
-        } catch (JMSException e) {
+            Files.createDirectories(Paths.get(filePath).getParent());
+            try (FileWriter writer = new FileWriter(filePath, true)) {
+                writer.write(event.replaceAll("\\s+", "") + "\n");
+            }
+            System.out.println("Event saved to: " + filePath);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

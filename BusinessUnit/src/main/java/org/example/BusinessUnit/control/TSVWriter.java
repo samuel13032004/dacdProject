@@ -10,19 +10,15 @@ import java.util.List;
 public class TSVWriter {
     static Date ts = new Date();
     public static void writeDataToTSV(String rootDirectory, List<WeatherEvent> weatherEvents, List<HotelEvent> hotelEvents) throws IOException {
-        // Crear el directorio raíz si no existe
         File rootDir = new File(rootDirectory);
         if (!rootDir.exists()) {
             if (!rootDir.mkdirs()) {
                 throw new IOException("Failed to create the root directory: " + rootDirectory);
             }
         }
-
-        // Escribir en el archivo TSV para el tópico Weather
         String weatherFileName = rootDirectory + File.separator + "weather_events.tsv";
         writeWeatherEventsToTSV(weatherFileName, weatherEvents);
 
-        // Escribir en el archivo TSV para el tópico Hotel
         String hotelFileName = rootDirectory + File.separator + "hotel_events.tsv";
         writeHotelEventsToTSV(hotelFileName, hotelEvents);
     }

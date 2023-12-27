@@ -45,39 +45,39 @@ public class EventSubscriber {
             e.printStackTrace();
         }
     }
-    private void processMessage(Message message, String eventType) {
-        try {
-            if (message instanceof TextMessage) {
-                String eventJson = ((TextMessage) message).getText();
-                System.out.println("Message received from " + eventType + " topic: " + eventJson);
-                try {
-                    JsonObject jsonObject = gson.fromJson(eventJson, JsonObject.class);
-                    System.out.println("Extract data based on the event type");
-                    if ("Weather".equals(eventType)) {
-                        System.out.println("Extract data based on the event Weather");
-                        WeatherEvent weatherEvent = extractWeatherData(jsonObject);
-                        weatherEvents.add(weatherEvent);
-                        TSVWriter.writeWeatherEventToTSV(weatherEvent, "datamart/weather_events.tsv");
-                    } else if ("Hotel".equals(eventType)) {
-                        System.out.println("Extract data based on the event Hotel");
-                        HotelEvent hotelEvent = extractHotelData(jsonObject);
-                        hotelEvents.add(hotelEvent);
-                        TSVWriter.writeHotelEventToTSV(hotelEvent, "datamart/hotel_events.tsv");
-                    } else {
-                        System.out.println("Unknown event type: " + eventType);
-                    }
-                    System.out.println(weatherEvents.size());
-                    System.out.println(hotelEvents.size());
-                } catch (Exception e) {
-                    System.err.println("Error processing JSON: " + e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        } catch (JMSException e) {
-            System.err.println("Error processing message: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+  private void processMessage(Message message, String eventType) {
+      try {
+          if (message instanceof TextMessage) {
+              String eventJson = ((TextMessage) message).getText();
+              System.out.println("Message received from " + eventType + " topic: " + eventJson);
+              try {
+                  JsonObject jsonObject = gson.fromJson(eventJson, JsonObject.class);
+                  System.out.println("Extract data based on the event type");
+                  if ("Weather".equals(eventType)) {
+                      System.out.println("Extract data based on the event Weather");
+                      WeatherEvent weatherEvent = extractWeatherData(jsonObject);
+                      weatherEvents.add(weatherEvent);
+                      TSVWriter.writeWeatherEventToTSV(weatherEvent, "DataMart/WeatherEventStore/weather_events.tsv");
+                  } else if ("Hotel".equals(eventType)) {
+                      System.out.println("Extract data based on the event Hotel");
+                      HotelEvent hotelEvent = extractHotelData(jsonObject);
+                      hotelEvents.add(hotelEvent);
+                      TSVWriter.writeHotelEventToTSV(hotelEvent, "DataMart/HotelEventStore/hotel_events.tsv");
+                  } else {
+                      System.out.println("Unknown event type: " + eventType);
+                  }
+                  System.out.println(weatherEvents.size());
+                  System.out.println(hotelEvents.size());
+              } catch (Exception e) {
+                  System.err.println("Error processing JSON: " + e.getMessage());
+                  e.printStackTrace();
+              }
+          }
+      } catch (JMSException e) {
+          System.err.println("Error processing message: " + e.getMessage());
+          e.printStackTrace();
+      }
+  }
 
    private WeatherEvent extractWeatherData(JsonObject jsonObject) {
        try {
