@@ -5,33 +5,9 @@ import org.example.BusinessUnit.model.WeatherEvent;
 
 import java.io.*;
 import java.util.Date;
-import java.util.List;
 
 public class TSVWriter {
     static Date ts = new Date();
-    public static void writeDataToTSV(String rootDirectory, List<WeatherEvent> weatherEvents, List<HotelEvent> hotelEvents) throws IOException {
-        File rootDir = new File(rootDirectory);
-        if (!rootDir.exists()) {
-            if (!rootDir.mkdirs()) {
-                throw new IOException("Failed to create the root directory: " + rootDirectory);
-            }
-        }
-        String weatherFileName = rootDirectory + File.separator + "weather_events.tsv";
-        writeWeatherEventsToTSV(weatherFileName, weatherEvents);
-
-        String hotelFileName = rootDirectory + File.separator + "hotel_events.tsv";
-        writeHotelEventsToTSV(hotelFileName, hotelEvents);
-    }
-    public static void writeWeatherEventsToTSV(String filePath, List<WeatherEvent> weatherEvents) {
-        for (WeatherEvent weatherEvent : weatherEvents) {
-            writeWeatherEventToTSV(weatherEvent, filePath);
-        }
-    }
-    public static void writeHotelEventsToTSV(String filePath, List<HotelEvent> hotelEvents) {
-        for (HotelEvent hotelEvent : hotelEvents) {
-            writeHotelEventToTSV(hotelEvent, filePath);
-        }
-    }
     static void writeWeatherEventToTSV(WeatherEvent weatherEvent, String filePath) {
         createDirectoryIfNotExists(filePath);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
