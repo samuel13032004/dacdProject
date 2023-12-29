@@ -19,16 +19,28 @@ In the following, some design principles and patterns present in the code will b
 
 ### SOLID Design Principles:
 
+**Single Responsibility Principle (SRP):**
 
-**Dependency Inversion Principle (DIP):**
-
-The WeatherProvider interface and its OpenWeatherMapProvider implementation allow dependency inversion. The interface provides an abstraction that facilitates the replacement of weather data providers without changing the code that consumes them.
+Each class has a unique reason to change. For example, `EventStoreBuilder` handles subscribing to topics and storing events, while `EventSubscriber` handles subscribing and processing messages.
 
 ### Design Patterns:
 
 **Observer Pattern:**
 
-The use of MessageListener in EventStoreBuilder and JMSWeatherStore follows the Observer pattern. When a message is received in the broker topic, observers are notified to perform some action.
+Used when implementing event subscription through the use of MessageListener. This allows different parts of the system to react asynchronously to events without direct coupling.
+
+**Singleton pattern (for connection to ActiveMQ):**
+
+The connection to ActiveMQ is handled using the Singleton pattern to ensure that only one connection instance exists. This improves efficiency and avoids unnecessary multiple connections.
+
+**Singleton pattern (Approach):**
+
+The current implementation of the controls (`WeatherControl` and `HotelControl`) are executed as scheduled tasks. While a classic singleton is not used, there is a singleton approach in the sense that a single instance of each control is executed over time.
+
+#### General Patterns:
+**Producer-Consumer:**
+
+Both modules use the producer-consumer pattern to handle the generation of weather and hotel events, and their storage in `JMSWeatherStore` and `JMSHotelStore`, respectively.
 
 ## Class Diagram
 
