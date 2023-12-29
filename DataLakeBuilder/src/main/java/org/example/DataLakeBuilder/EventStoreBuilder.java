@@ -16,7 +16,7 @@ public class EventStoreBuilder implements EventStore{
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
     String formattedDate = dateFormat.format(currentDate);
     @Override
-    public void startSubscription() {
+    public void startSubscription(String args) {
         try {
             System.out.println("Starting broker subscription...");
             ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_BROKER_URL);
@@ -29,7 +29,7 @@ public class EventStoreBuilder implements EventStore{
                 if (message instanceof TextMessage) {
                     try {
                         String text = ((TextMessage) message).getText();
-                        saveToEventStore("eventstore/datalake/prediction.Weather/prediction-provider/" + formattedDate + ".events", text);
+                        saveToEventStore(args+"/eventstore/prediction.Weather/prediction-provider/" + formattedDate + ".events", text);
                     } catch (JMSException e) {
                         e.printStackTrace();
                     }
@@ -41,7 +41,7 @@ public class EventStoreBuilder implements EventStore{
                 if (message instanceof TextMessage) {
                     try {
                         String text = ((TextMessage) message).getText();
-                        saveToEventStore("eventstore/datalake/prediction.Hotel/prediction-provider/" + formattedDate + ".events", text);
+                        saveToEventStore(args+"/eventstore/prediction.Hotel/prediction-provider/" + formattedDate + ".events", text);
                     } catch (JMSException e) {
                         e.printStackTrace();
                     }
