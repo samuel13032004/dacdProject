@@ -13,10 +13,13 @@ import javax.jms.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 public class EventSubscriber {
     private static final String WEATHER_TOPIC = "prediction.Weather";
     private static final String HOTEL_TOPIC = "prediction.Hotel";
+    private static final int MAX_WEATHER_EVENTS = 280;
+    private static final int MAX_HOTEL_EVENTS = 15;
     private Connection connection;
     private Gson gson;
     private ArrayList<HotelEvent> hotelEvents;
@@ -27,7 +30,7 @@ public class EventSubscriber {
         this.weatherEvents = new ArrayList<>();
     }
 
-    public void startSubscription() {
+    public void startSubscription(CountDownLatch latch) {
         System.out.println("Starting broker subscription...");
         try {
             ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_BROKER_URL);
@@ -37,9 +40,11 @@ public class EventSubscriber {
             Topic weatherTopic = session.createTopic(WEATHER_TOPIC);
             MessageConsumer weatherMessageConsumer = session.createConsumer(weatherTopic);
             weatherMessageConsumer.setMessageListener(message -> processMessage(message, "Weather"));
+            latch.countDown();
             Topic hotelTopic = session.createTopic(HOTEL_TOPIC);
             MessageConsumer hotelMessageConsumer = session.createConsumer(hotelTopic);
             hotelMessageConsumer.setMessageListener(message -> processMessage(message, "Hotel"));
+            latch.countDown();
             System.out.println("Broker subscription initiated.");
         } catch (JMSException e) {
             e.printStackTrace();
@@ -56,13 +61,12 @@ public class EventSubscriber {
                   if ("Weather".equals(eventType)) {
                       System.out.println("Extract data based on the event Weather");
                       WeatherEvent weatherEvent = extractWeatherData(jsonObject);
-                      weatherEvents.add(weatherEvent);
-                      TSVWriter.writeWeatherEventToTSV(weatherEvent, "DataMart/WeatherEventStore/weather_events.tsv");
+                      updateWeatherEventsList(weatherEvent);
                   } else if ("Hotel".equals(eventType)) {
                       System.out.println("Extract data based on the event Hotel");
                       HotelEvent hotelEvent = extractHotelData(jsonObject);
-                      hotelEvents.add(hotelEvent);
-                      TSVWriter.writeHotelEventToTSV(hotelEvent, "DataMart/HotelEventStore/hotel_events.tsv");
+                      updateHotelEventsList(hotelEvent);
+
                   } else {
                       System.out.println("Unknown event type: " + eventType);
                   }
@@ -78,7 +82,6 @@ public class EventSubscriber {
           e.printStackTrace();
       }
   }
-
    private WeatherEvent extractWeatherData(JsonObject jsonObject) {
        try {
            JsonObject location = jsonObject.getAsJsonObject("location");
@@ -140,7 +143,20 @@ public class EventSubscriber {
         }
         return stringList;
     }
-
+    private void updateWeatherEventsList(WeatherEvent weatherEvent) {
+        if (weatherEvents.size() >= MAX_WEATHER_EVENTS) {
+            weatherEvents.remove(0);
+        }
+        weatherEvents.add(weatherEvent);
+        TSVWriter.writeWeatherEventToTSV(weatherEvent, "DataMart/WeatherEventStore/weather_events.tsv");
+    }
+    private void updateHotelEventsList(HotelEvent hotelEvent) {
+        if (hotelEvents.size() >= MAX_HOTEL_EVENTS) {
+            hotelEvents.remove(0);
+        }
+        hotelEvents.add(hotelEvent);
+        TSVWriter.writeHotelEventToTSV(hotelEvent, "DataMart/HotelEventStore/hotel_events.tsv");
+    }
     public ArrayList<HotelEvent> getHotelEvents() {
         return hotelEvents;
     }

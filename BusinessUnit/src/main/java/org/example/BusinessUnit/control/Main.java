@@ -1,11 +1,13 @@
 package org.example.BusinessUnit.control;
 
+import java.util.concurrent.CountDownLatch;
 public class Main {
     public static void main(String[] args) {
+        CountDownLatch latch = new CountDownLatch(2);
         EventSubscriber eventSubscriptionManager = new EventSubscriber();
-        eventSubscriptionManager.startSubscription();
+        eventSubscriptionManager.startSubscription(latch);
         try {
-            Thread.sleep(20000);
+            latch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

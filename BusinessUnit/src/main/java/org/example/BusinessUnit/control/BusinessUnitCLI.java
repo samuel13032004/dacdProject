@@ -19,27 +19,27 @@ public class BusinessUnitCLI implements CommandLineInterface{
     @Override
     public void start() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Seleccione una isla:");
+        System.out.println("Select an island: ");
         for (int i = 0; i < islands.length; i++) {
-            System.out.println("Isla " + (i + 1) + ": " + islands[i]);
+            System.out.println("Island " + (i + 1) + ": " + islands[i]);
         }
         int selectedIslandIndex;
         do {
-            System.out.print("Ingrese el número de la isla seleccionada: ");
+            System.out.print("Enter the number of the selected island: ");
             selectedIslandIndex = scanner.nextInt();
 
             if (selectedIslandIndex < 1 || selectedIslandIndex > islands.length) {
-                System.out.println("¡Número de isla no válido! Por favor, elija un número dentro del rango.");
+                System.out.println("Invalid island number! Please choose a number within the range.");
             }
         } while (selectedIslandIndex < 1 || selectedIslandIndex > islands.length);
         scanner.nextLine();
         String selectedIsland = islands[selectedIslandIndex - 1];
         while (true) {
-            System.out.println("\n1. Consultar pronóstico del tiempo");
-            System.out.println("2. Consultar hoteles");
-            System.out.println("3. Cambiar isla");
-            System.out.println("4. Salir");
-            System.out.print("Seleccione una opción: ");
+            System.out.println("\n1. Consult the weather forecast");
+            System.out.println("2. Consult hotels");
+            System.out.println("3. Change island");
+            System.out.println("4. Exit");
+            System.out.print("Select an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
             switch (choice) {
@@ -50,16 +50,16 @@ public class BusinessUnitCLI implements CommandLineInterface{
                     showHotels(selectedIsland);
                     break;
                 case 3:
-                    System.out.println("Seleccione una isla:");
+                    System.out.println("Select an island: ");
                     for (int i = 0; i < islands.length; i++) {
-                        System.out.println("Isla " + (i + 1) + ": " + islands[i]);
+                        System.out.println("Island " + (i + 1) + ": " + islands[i]);
                     }
                     do {
-                        System.out.print("Ingrese el número de la nueva isla seleccionada: ");
+                        System.out.print("Enter the number of the new island selected: ");
                         selectedIslandIndex = scanner.nextInt();
 
                         if (selectedIslandIndex < 1 || selectedIslandIndex > islands.length) {
-                            System.out.println("¡Número de isla no válido! Por favor, elija un número dentro del rango.");
+                            System.out.println("Invalid island number! Please choose a number within the range.");
                         }
                     } while (selectedIslandIndex < 1 || selectedIslandIndex > islands.length);
                     scanner.nextLine();
@@ -73,29 +73,29 @@ public class BusinessUnitCLI implements CommandLineInterface{
 
     private void showWeatherForecast(String selectedIsland) {
         List<WeatherEvent> weatherEvents = eventSubscriber.getWeatherEvents();
-        System.out.println("Pronóstico del tiempo para " + selectedIsland + ":");
+        System.out.println("Weather forecast for " + selectedIsland + ":");
         for (WeatherEvent weatherEvent : weatherEvents) {
             if (selectedIsland.equals(weatherEvent.getIsland()))
-                System.out.println("Fecha: " + weatherEvent.getPredictionTime() + ", Temperatura: " + weatherEvent.getTemp() + "°C, Velocidad del viento: " + weatherEvent.getWindSpeed() + " m/s");
+                System.out.println("Date: " + weatherEvent.getPredictionTime() + ", Temperature: " + weatherEvent.getTemp() + "°C, Wind speed: " + weatherEvent.getWindSpeed() + " m/s");
         }
     }
 
     private void showHotels(String selectedIsland) {
         List<HotelEvent> hotelEvents = eventSubscriber.getHotelEvents();
-        System.out.println("Información del hotel para " + selectedIsland + ":");
+        System.out.println("Hotel information for " + selectedIsland + ":");
         for (HotelEvent hotelEvent : hotelEvents) {
             if (selectedIsland.equals(hotelEvent.getIsland())) {
-                System.out.println("Nombre del hotel: " + hotelEvent.getHotelName());
-                System.out.println("Fecha de salida: " + hotelEvent.getCheckout());
-                System.out.println("Días de precio promedio:");
+                System.out.println("Name of the hotel: " + hotelEvent.getHotelName());
+                System.out.println("Departure date: " + hotelEvent.getCheckout());
+                System.out.println("Average price days:");
                 for (String day : hotelEvent.getAveragePriceDay()) {
                     System.out.println("  " + day);
                 }
-                System.out.println("Días de precio más bajo:");
+                System.out.println("Lower price days:");
                 for (String day : hotelEvent.getCheapPriceDay()) {
                     System.out.println("  " + day);
                 }
-                System.out.println("Días de precio más alto:");
+                System.out.println("Higher price days:");
                 for (String day : hotelEvent.getHighPriceDay()) {
                     System.out.println("  " + day);
                 }
