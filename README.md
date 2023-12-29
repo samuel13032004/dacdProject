@@ -36,8 +36,7 @@ The use of MessageListener in EventStoreBuilder and JMSWeatherStore follows the 
 
 ## Arguments or environment variables
 
-En el módulo **WeatherPredictionProvider**, se emplea una variable de entorno denominada "APIKEY" para resguardar la clave de la API de OpenWeatherMap, utilizada en las consultas meteorológicas. Esta práctica garantiza la seguridad de las credenciales, evitando su exposición en el código fuente. Se puede acceder a esta variable de entorno de la siguiente forma:
-
+In the **WeatherPredictionProvider** module, an environment variable called "APIKEY" is used to protect the OpenWeatherMap API key used in weather queries. This practice ensures the security of the credentials, preventing their exposure in the source code. This environment variable can be accessed as follows:
 ```java
     private final String ApiKey = System.getenv("APIKEY");
 ```
