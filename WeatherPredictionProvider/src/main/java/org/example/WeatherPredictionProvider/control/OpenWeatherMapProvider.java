@@ -16,7 +16,6 @@ public class OpenWeatherMapProvider implements WeatherProvider {
     }
     @Override
     public void startPeriodicQueries(WeatherControl weatherControl) {
-        new WeatherControl(getApiKey(),weatherStore).run();
         if (weatherStore == null) {
             throw new IllegalStateException("weatherStore must be set before starting periodic queries.");
         }

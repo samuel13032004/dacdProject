@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 public class Scheduler implements HotelProvider {
     @Override
     public void scheduleHotelControl(HotelControl hotelControl) {
-        new HotelControl().run();
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         long nowInMillis = System.currentTimeMillis();
         Calendar calendar = Calendar.getInstance();
