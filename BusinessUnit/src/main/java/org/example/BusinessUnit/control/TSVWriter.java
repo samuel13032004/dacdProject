@@ -8,9 +8,31 @@ import java.util.Date;
 
 public class TSVWriter {
     static Date ts = new Date();
+    private static final int MAX_LINES_FILEPATH_WEATHER = 281;
+    private static final int MAX_LINES_FILEPATH_HOTEL = 16;
+
+    static void clearFile(String filePath) {
+        try (PrintWriter writer = new PrintWriter(filePath)) {
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+    public static int countLines(String filePath) {
+        try (LineNumberReader reader = new LineNumberReader(new FileReader(filePath))) {
+            while (reader.skip(Long.MAX_VALUE) > 0) {
+            }
+            return reader.getLineNumber();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
     static void writeWeatherEventToTSV(WeatherEvent weatherEvent, String filePath) {
         createDirectoryIfNotExists(filePath);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            if(countLines(filePath) >= MAX_LINES_FILEPATH_WEATHER) {
+                clearFile(filePath);
+            }
             if (fileIsEmpty(filePath)) {
                 writer.write("Island\tCityName\tPredictionTime\tTemperature\tHumidity\tClouds\tWindSpeed\tTimestamp\n");
             }
@@ -34,7 +56,9 @@ public class TSVWriter {
     static void writeHotelEventToTSV(HotelEvent hotelEvent, String filePath) {
         createDirectoryIfNotExists(filePath);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-            // Escribir encabezados
+            if(countLines(filePath) >= MAX_LINES_FILEPATH_HOTEL) {
+                clearFile(filePath);
+            }
             if (fileIsEmpty(filePath)) {
                 writer.write("Island\tCity\tHotelName\tCheckout\tAveragePriceDay\tCheapPriceDay\tHighPriceDay\tTimestamp\n");
             }
@@ -69,7 +93,7 @@ public class TSVWriter {
             return reader.readLine() == null;
         } catch (IOException e) {
             e.printStackTrace();
-            return true; // Considerar el archivo como vacío en caso de error
+            return true;
         }
     }
 }
