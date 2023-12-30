@@ -24,14 +24,13 @@ public class HotelControl implements Runnable {
     DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     String formattedDate = dateIn5Days.format(format);
     private final Location[] hotelLocations = {
-            new Location("g562819-d600110", formattedDate,"HD Parque Cristobal Gran Canaria","Playa del inglés ","Gran Canaria"),
+            new Location("g562819-d530932", formattedDate,"Tagoror Beach Apartments","Playa del inglés ","Gran Canaria"),
             new Location("g562819-d287443", formattedDate,"Barceló Margaritas","Playa del inglés ","Gran Canaria"),
             new Location("g562819-d289659", formattedDate,"Abora Continental by Lopesan Hotels","Playa del inglés ","Gran Canaria"),
             new Location("g187478-d273097", formattedDate,"Hotel Lancelot" ,"Arrecife","Lanzarote"),
             new Location("g187478-d507813", formattedDate,"Arrecife Gran Hotel & Spa","Arrecife","Lanzarote"),
             new Location("g659634-d237060", formattedDate,"Hotel LIVVO Risco Del Gato Suites","Corralejo","Fuerteventura"),
             new Location("g580322-d678447", formattedDate,"Barcelo Corralejo Bay" ,"Corralejo","Fuerteventura"),
-            new Location("g580322-d288065", formattedDate,"LABRANDA Corralejo Village","Corralejo","Fuerteventura"),
             new Location("g187470-d15745744",formattedDate,"Avalos Beach House","San Sebastián de La Gomera","La Gomera"),
             new Location("g1877764-d4697336", formattedDate,"Pensión Amparo Las Hayas","San Sebastián de La Gomera","La Gomera"),
             new Location("g659324-d573646", formattedDate,"Hotel Valle Aridane","Llanos de Aridane","La Palma"),

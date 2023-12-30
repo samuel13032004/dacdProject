@@ -25,7 +25,7 @@
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.36.0.3</version> <!-- O la versión más reciente disponible -->
+            <version>3.36.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
@@ -37,11 +37,10 @@
             <artifactId>activemq-client</artifactId>
             <version>5.17.2</version>
         </dependency>
-        <!-- Otras dependencias -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.8</version> <!-- La versión puede cambiar, verifica la última versión disponible -->
+            <version>1.4.8</version>
         </dependency>
     </dependencies>
 
