@@ -44,7 +44,8 @@ Both modules use the producer-consumer pattern to handle the generation of weath
 
 ## Class Diagram
 
-![img.png](img.png)
+![TRABAJO FINAL DACD](https://github.com/samuel13032004/dacdProject/assets/145439211/96565ebb-9233-4e01-ae44-275ac8e2fc70)
+
 
 ## Arguments or environment variables
 
