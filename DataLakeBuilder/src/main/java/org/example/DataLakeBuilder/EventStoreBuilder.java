@@ -60,7 +60,6 @@ public class EventStoreBuilder implements EventStore{
             try (FileWriter writer = new FileWriter(filePath, true)) {
                 writer.write(event.replaceAll("\\s+", "") + "\n");
             }
-            System.out.println("Event saved to: " + filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }

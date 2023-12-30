@@ -47,8 +47,6 @@ public class TSVWriter {
                     weatherEvent.getWindSpeed(),
                     weatherEvent.getTs()
             ));
-
-            System.out.println("Weather event written to TSV file: " + filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,8 +60,6 @@ public class TSVWriter {
             if (fileIsEmpty(filePath)) {
                 writer.write("Island\tCity\tHotelName\tCheckout\tAveragePriceDay\tCheapPriceDay\tHighPriceDay\tTimestamp\n");
             }
-
-            // Escribir datos de eventos de hotel
             writer.write(String.format(
                     "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n",
                     hotelEvent.getIsland(),
@@ -75,8 +71,6 @@ public class TSVWriter {
                     String.join(",", hotelEvent.getHighPriceDay()),
                     ts
             ));
-
-            System.out.println("Hotel event written to TSV file: " + filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }

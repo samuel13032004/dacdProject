@@ -54,24 +54,17 @@ public class EventSubscriber {
       try {
           if (message instanceof TextMessage) {
               String eventJson = ((TextMessage) message).getText();
-              System.out.println("Message received from " + eventType + " topic: " + eventJson);
               try {
                   JsonObject jsonObject = gson.fromJson(eventJson, JsonObject.class);
-                  System.out.println("Extract data based on the event type");
                   if ("Weather".equals(eventType)) {
-                      System.out.println("Extract data based on the event Weather");
                       WeatherEvent weatherEvent = extractWeatherData(jsonObject);
                       updateWeatherEventsList(weatherEvent);
                   } else if ("Hotel".equals(eventType)) {
-                      System.out.println("Extract data based on the event Hotel");
                       HotelEvent hotelEvent = extractHotelData(jsonObject);
                       updateHotelEventsList(hotelEvent);
-
                   } else {
                       System.out.println("Unknown event type: " + eventType);
                   }
-                  System.out.println(weatherEvents.size());
-                  System.out.println(hotelEvents.size());
               } catch (Exception e) {
                   System.err.println("Error processing JSON: " + e.getMessage());
                   e.printStackTrace();
@@ -148,14 +141,14 @@ public class EventSubscriber {
             weatherEvents.remove(0);
         }
         weatherEvents.add(weatherEvent);
-        TSVWriter.writeWeatherEventToTSV(weatherEvent, "DataMart/WeatherEventStore/weather_events.tsv");
+        TSVWriter.writeWeatherEventToTSV(weatherEvent, "DataMart/eventstore/prediction.Weather/weather_events.tsv");
     }
     private void updateHotelEventsList(HotelEvent hotelEvent) {
         if (hotelEvents.size() >= MAX_HOTEL_EVENTS) {
             hotelEvents.remove(0);
         }
         hotelEvents.add(hotelEvent);
-        TSVWriter.writeHotelEventToTSV(hotelEvent, "DataMart/HotelEventStore/hotel_events.tsv");
+        TSVWriter.writeHotelEventToTSV(hotelEvent, "DataMart/eventstore/prediction.Hotel/hotel_events.tsv");
     }
     public ArrayList<HotelEvent> getHotelEvents() {
         return hotelEvents;

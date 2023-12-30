@@ -1,17 +1,16 @@
 package org.example.HotelPredictionProvider.model;
 
-import java.util.Date;
 import java.util.List;
 
 public class Details {
     private final List<String> averagePriceDay;
     private final List<String> cheapPriceDay;
     private final List<String> highPriceDay;
-    private final Date ts;
+    private final String ts;
     private final String ss;
     private Location hotelLocation;
 
-    public Details(List<String> averagePriceDay, List<String> cheapPriceDay, List<String> highPriceDay, Date ts, String ss){
+    public Details(List<String> averagePriceDay, List<String> cheapPriceDay, List<String> highPriceDay, String ts, String ss){
         this.averagePriceDay = averagePriceDay;
         this.cheapPriceDay = cheapPriceDay;
         this.highPriceDay = highPriceDay;
@@ -27,7 +26,7 @@ public class Details {
     public List<String> getHighPriceDay() {
         return highPriceDay;
     }
-    public Date getTs() {
+    public String getTs() {
         return ts;
     }
     public String getSs() {

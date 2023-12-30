@@ -83,7 +83,6 @@ public class WeatherControl extends TimerTask {
                     Weather weather = new Weather(tempNew, humidity, clouds, windSpeedMetersPerSecond, timestamp, source, predictionTimestamp);
                     weather.addLocation(latitude,longitude,cityName,island);
                     weatherList.add(weather);
-                    //System.out.println(weatherList.size());
                 }
                 weatherStore.save(weatherList);
             } catch (Exception e) {

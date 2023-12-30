@@ -42,6 +42,7 @@ public class HotelControl implements Runnable {
             new Location("g187482-d23271293", formattedDate,"AC Hotel Tenerife","Santa Cruz de Tenerife","Tenerife"),
     };
     public void run() {
+        System.out.println("New Consultation");
         try {
             List<Details> hotelDetailsList = new ArrayList<>();
             for (Location location : hotelLocations) {
@@ -52,8 +53,6 @@ public class HotelControl implements Runnable {
                 if (details != null) {
                     hotelDetailsList.add(details);
                 }
-                System.out.println(hotelDetailsList);
-                System.out.println(hotelDetailsList.size());
             }
             JMSHotelStore.save(hotelDetailsList);
         } catch (Exception e) {
@@ -65,7 +64,6 @@ public class HotelControl implements Runnable {
         try {
             JsonObject jsonObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
             JsonObject resultObject = jsonObject.getAsJsonObject("result");
-            String chkOut = resultObject.get("chk_out").getAsString();
             JsonObject heatmapObject = resultObject.getAsJsonObject("heatmap");
             JsonArray averagePriceDays = heatmapObject.getAsJsonArray("average_price_days");
             JsonArray cheapPriceDays = heatmapObject.getAsJsonArray("cheap_price_days");
@@ -77,13 +75,7 @@ public class HotelControl implements Runnable {
             Date timestampDate = new Date(timestamp);
             String ss = "hotel-prediction";
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            System.out.println("Timestamp: " + sdf.format(timestampDate));
-            System.out.println("chk_out: " + chkOut);
-            System.out.println("average_price_days: " + averagePriceDaysList);
-            System.out.println("cheap_price_days: " + cheapPriceDaysList);
-            System.out.println("high_price_days: " + highPriceDaysList);
-            System.out.println(location.getIsland());
-            Details details = new Details(averagePriceDaysList, cheapPriceDaysList, highPriceDaysList, timestampDate, ss);
+            Details details = new Details(averagePriceDaysList, cheapPriceDaysList, highPriceDaysList, sdf.format(timestampDate), ss);
             details.addHotelLocation(location.getHotelKey(), location.getCheckout(), location.getHotelName(), location.getCity(), location.getIsland());
             return details;
         } catch (Exception e) {
